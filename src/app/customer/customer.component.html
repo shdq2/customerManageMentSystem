@@ -1,0 +1,151 @@
+<div>
+    <h1>Customer Management</h1>
+    <hr />
+ 
+</div>
+
+
+<div id="customer-main" >
+    <select id="customer-selected" (change)="onChange($event.target.value)"  >
+        <option value="all" selected>전체</option>
+        <option value="id" >Id</option>
+        <option value="name">이름</option>
+        <option value="addr">주소</option>
+        <option value="phone">전화번호</option>        
+        
+    </select> 
+    
+    <input type="text" [(ngModel)]="searchData"/> 
+    <input type="button" value="검색" class="btn btn-default" (click)="onSearchUser()"/>
+    <div class="customer-manage">
+        <input type="button" value="회원 등록" class="btn btn-primary" (click)="currentIdx=-1;open(content)"/> 
+        <input type="button" value="회원 삭제" class="btn btn-danger" (click)="open(deleteContent)"/>
+    </div>
+    <br />
+    <div >
+        <table class="table" id="customerListTable">
+            <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox" id="all-check" (click)="checkboxAllClick($event.target)" [(ngModel)]="isMasterCheck"/>
+                    </th>
+                    <th>
+                        회원번호
+                    </th>
+                    <th>
+                        이름
+                    </th>
+                    <th>
+                        주소
+                    </th>
+                    <th>
+                        전화번호
+                    </th>
+                    <th>
+                        비고
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr 
+                *ngFor="let item of items;let idx = index"
+                >
+                    <td>
+                        <input type="checkbox" class="customer-check" name="check[]" [(ngModel)]="item.isSelected" (change)="isAllCheck()"/>
+                    </td>
+                    <td>
+                        {{item.customer_id}}
+                    </td>
+                    <td>
+                        {{item.customer_name}}
+                    </td>
+                    <td>
+                        {{item.customer_addr.length > 10 ?item.customer_addr.substring(0,10)+'...':item.customer_addr}}
+                    </td>
+                    <td>
+                        {{item.customer_phone}}
+                    </td>
+                    <td>
+                        <input type="button" class="btn btn-warning" value="자세히 보기" (click)="currentIdx = idx;onDetail(item.customer_id)"/>
+                    </td>                    
+                </tr>
+            </tbody>           
+        </table>        
+    </div>
+</div> 
+
+<ng-template #content let-modal>
+    <form (submit)="onSubmit($event.target,modal)" id="customer_info_form" action='http://localhost:3000/auth/addcustomer' method="post">    
+        <div class="deam" (click)="deamClick($event.target.classList.value,modal)">
+            <div id="add-customer">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="add-customer-body">
+                        <table id="add-customer-section">
+                            
+                            <tr>
+                                <td>
+                                    <input type="hidden" name="id"/>
+                                    이름
+                                </td>
+                                <td class="add-customer-section-input">
+                                    <input type="text" placeholder="이름 입력" class="form-control" name="name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    주소
+                                </td>
+                                <td class="add-customer-section-input">
+                                    <input type="text" placeholder="주소 입력" class="form-control" name="addr"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    전화번호
+                                </td>
+                                <td class="add-customer-section-input">
+                                    <input type="text" placeholder="전화번호 입력" class="form-control" name="phone"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">취소</button>
+                    <button type="submit" class="btn btn-primary" id="addBtn">추가</button>
+                </div>
+            </div>
+        </div>
+    
+    </form>
+</ng-template>
+
+<ng-template #deleteContent let-modal>
+    <form (submit)="onDeleteItem(modal)" id="customer_info_form" action='http://localhost:3000/auth/addcustomer' method="post">    
+        <div class="deam" (click)="deamClick($event.target.classList.value,modal)">
+            <div id="add-customer">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-basic-title">회원 삭제</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    회원을 정말 삭제하시겠습니꺼?
+                    <p style="color:red;">※ 삭제된 회원은 복구하실 수 없습니다.</p>                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">취소</button>
+                    <button type="submit" class="btn btn-danger" id="deleteBtn">삭제</button>
+                </div>
+            </div>
+        </div>
+    
+    </form>
+</ng-template>

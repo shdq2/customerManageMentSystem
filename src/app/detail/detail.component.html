@@ -1,0 +1,278 @@
+<div>
+    <h1 *ngIf="user_Info">{{user_Info.customer_name}} Detail</h1>
+    <hr />
+ 
+</div>
+
+
+<div id="customer-main" >
+    <input type="button" value="수정" class="btn btn-warning" (click)="open(content)"/>
+    <input type="button" value="시술 내역 추가" class="btn btn-primary" (click)="open(surgery)"/>
+    <br />
+    <br />
+    <table class="table">
+        <tr>
+            <th class="thTitle">
+                이름
+            </th>
+            <td class="tdText">
+                <input type="text" *ngIf="isUpdateStatus === true" name="name">
+                <label *ngIf="isUpdateStatus === false">
+                    {{user_Info.customer_name}}
+                </label>
+                
+            </td>
+
+            <th class="thTitle">
+                방문횟수 
+            </th>
+            <td class="tdText">
+                {{historyList.length}} 회
+            </td>
+            <th class="thTitle">
+                첫방문일
+            </th>
+            <td class="tdText">
+                {{user_Info.customer_date}}
+            </td>
+            <th class="thTitle">
+                전화번호
+            </th>
+            <td class="tdText">
+                <input type="text" *ngIf="isUpdateStatus === true" name="phone">
+                <label>
+                    {{user_Info.customer_phone}}
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <th class="thTitle">
+                주소
+            </th>
+            <td colspan="7">
+                <input type="text" *ngIf="isUpdateStatus === true" name="addr">
+                <label *ngIf="isUpdateStatus === false">
+                    {{user_Info.customer_addr}}
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <th class="thTitle">
+                비고
+            </th>
+            <td colspan="7">
+                <textarea style="width:100%;height:100%;">{{user_Info.customer_memo}}</textarea>
+            </td>
+        </tr>
+    </table>
+
+    <h3>
+        시술 내역
+    </h3>
+
+    <table class="table">
+        <tr>
+            <th>
+                시술 내용
+            </th>
+            <th>
+                시술 일시
+            </th>
+            <th>
+                원가
+            </th>
+            <th>
+                결제 금액
+            </th>  
+            <th>
+                결제 방법
+            </th>  
+            <th>
+                특이사항
+            </th>            
+        </tr>
+        <tr 
+            mat-tab-link 
+            *ngFor="let history of historyList"
+
+        >
+            <td>
+                {{history.detail_name}}
+            </td>
+            <td>
+                {{history.his_date}}
+            </td>
+            <td>
+                {{addComma(history.detail_pay)}} 원
+            </td>
+            <td>
+                {{addComma(history.pay)}} 원
+            </td>
+            <td>
+                {{history.his_type}}
+            </td>
+            <td>
+                {{history.memo}}
+            </td>
+        </tr>
+    </table>
+</div> 
+
+
+<ng-template #content let-modal>
+    
+    <form (submit)="onSubmit($event.target,modal)" id="customer_info_form" action='http://localhost:3000/auth/updatecustomer' method="post">    
+    <div class="deam" (click)="deamClick($event.target.classList.value,modal)">
+        <div id="add-customer">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+                <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="add-customer-body">
+                    <table id="add-customer-section">
+                        
+                        <tr>
+                            <td>
+                                <input type="hidden" name="id"/>
+                                이름
+                            </td>
+                            <td class="add-customer-section-input">
+                                <input type="text" placeholder="이름 입력" class="form-control" name="name" value={{user_Info.customer_name}}/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                주소
+                            </td>
+                            <td class="add-customer-section-input">
+                                <input type="text" placeholder="주소 입력" class="form-control" name="addr"value={{user_Info.customer_addr}}/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                전화번호
+                            </td>
+                            <td class="add-customer-section-input">
+                                <input type="text" placeholder="전화번호 입력" class="form-control" name="phone" value={{user_Info.customer_phone}}/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                비고
+                            </td>
+                            <td class="add-customer-section-input">
+                                <input type="text" placeholder="특이사항 입력" class="form-control" name="memo" value={{user_Info.customer_memo}}/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>    
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">취소</button>
+                <button type="submit" class="btn btn-primary" id="addBtn">추가</button>
+            </div>
+        </div>
+        
+    </div>
+</form>
+</ng-template>
+
+<ng-template #surgery let-modal>
+    <form  id="surgery_form" (submit)="addHistory($event.target,modal)">    
+        <div class="deam" (click)="deamClick($event.target.classList.value,modal)">
+            <div id="surgery_menu">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-basic-title">Surgery</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="add-customer-body">
+                        <table id="add-customer-section">                    
+                            <tr>
+                                <td>
+                                    시술 종류
+                                </td>
+                                <td class="add-customer-section-input">
+                                    <select id="surgery_category" (change)="surgeryChange($event.target.value)">
+                                        <option selected value="0">
+                                            옵션을 선택해주세요
+                                        </option>
+                                        <option mat-tab-link 
+                                            
+                                            *ngFor="let surgery of surgeryList;let idx = index;"
+                                            value={{surgery.surgery_id}}
+                                        >
+                                            {{surgery.surgery_name}}
+                                        </option>
+                                        
+                                    </select>
+                                    <select id="surgery_category_detail" *ngIf="isSelected" (change)="detailChange($event.target.value)">
+                                        <option selected value="0">
+                                            옵션을 선택해주세요
+                                        </option>
+                                        <option mat-tab-link                                         
+                                                *ngFor="let surgerydetail of surgeryDeatilList;let idx = index;"
+                                                id={{surgerydetail.detail_id}}
+                                                value={{idx}}                                        
+                                            >
+                                            {{surgerydetail.detail_name}}
+                                        </option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    원가
+                                </td>
+                                <td class="add-customer-section-input">
+                                    <label>{{currentItem.detail_pay}}</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    실 금액
+                                </td>
+                                <td class="add-customer-section-input">
+                                    <input type="text" placeholder="금액 입력" class="form-control" name="phone" value={{currentItem.detail_pay}} id="money"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    결제방법
+                                </td>
+                                <td class="add-customer-section-input">
+                                    <select id="surgery_pay_type"  >
+                                        <option selected value="카드">
+                                            카드
+                                        </option>
+                                        <option value="현금">
+                                            현금
+                                        </option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    비고
+                                </td>
+                                <td class="add-customer-section-input">
+                                    <input type="text" placeholder="특이사항 입력" class="form-control" name="memo" id="memo"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">취소</button>
+                    <button type="submit" class="btn btn-primary" id="addBtn">추가</button>
+                </div>
+            </div>        
+        </div>
+    
+    </form>
+</ng-template>

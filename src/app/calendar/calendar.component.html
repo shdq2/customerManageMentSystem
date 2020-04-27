@@ -1,0 +1,56 @@
+<div class="main">
+    <div class="content-wrap">      
+      <div class="content-right">
+          <div id="prev-div">
+            <label id="prev" (click)="prevBtn()">
+                &#60;
+            </label>
+          </div>
+        <div id="next-div">
+            <label id="next" (click)="nextBtn()">
+                &#62;
+            </label>
+        </div>
+        
+        <table id="calendar" align="center">
+          <thead>
+            <tr >
+                <td style="text-align: center;" colspan="7">
+                    {{currentMonth}}
+                </td>
+                
+            </tr>
+            <tr>
+                <td class = "sun" align="center">Sun</td>
+                <td align="center">Mon</td>
+                <td align="center">Tue</td>
+                <td align="center">Wed</td>
+                <td align="center">Thu</td>
+                <td align="center">Fri</td>
+                <td class= "sat" align="center">Sat</td>
+              </tr>
+          </thead>
+          <tbody id="calendar-body" class="calendar-body">
+              <tr 
+              mat-tab-link   
+              *ngFor="let week of monthDay;let idx = index">
+                <td
+                    mat-tab-link   
+                    *ngFor="let day of week"
+                    (click)="dayClick(day)"
+                    [ngClass]="{'activate': day.activate}"
+                    style="position:relative;"
+                >
+                  <div class="surgeryCount" *ngIf="day.day != ''">
+                    <label style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:15px;">
+                      {{day.count}}
+                    </label>                    
+                  </div>
+                    {{day.day}}                    
+                </td>
+              </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

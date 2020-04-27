@@ -1,0 +1,146 @@
+<div class="main">
+    <div class="content-wrap">      
+      <div class="content-right">
+          <div id="prev-div">
+            <label id="prev" (click)="prevBtn()">
+                &#60;
+            </label>
+          </div>
+        <div id="next-div">
+            <label id="next" (click)="nextBtn()">
+                &#62;
+            </label>
+        </div>
+        
+        <table id="calendar" align="center">
+          <thead>
+            <tr >
+                <td style="text-align: center;" colspan="7">
+                    {{currentMonth}}
+                </td>
+                
+            </tr>
+            <tr>
+                <td class = "sun" align="center">Sun</td>
+                <td align="center">Mon</td>
+                <td align="center">Tue</td>
+                <td align="center">Wed</td>
+                <td align="center">Thu</td>
+                <td align="center">Fri</td>
+                <td class= "sat" align="center">Sat</td>
+              </tr>
+          </thead>
+          <tbody id="calendar-body" class="calendar-body">
+              <tr 
+              mat-tab-link   
+              *ngFor="let week of monthDay;let idx = index">
+                <td
+                    mat-tab-link   
+                    *ngFor="let day of week"
+                    (click)="dayClick(day,content,day.day)"
+                    [ngClass]="{'activate': day.activate}"
+                    style="position:relative;"
+                >
+                  <div class="surgeryCount" *ngIf="day.day != ''">
+                    <label style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:15px;">
+                      {{day.count}}
+                    </label>                    
+                  </div>
+                    {{day.day}}                    
+                </td>
+              </tr>
+          </tbody>
+        </table>
+        <h1 > 월간 통계</h1>
+        <hr />
+        <table class="table monthTotal">
+            <tr>
+                <th>총 방문 횟수</th>
+                <td>{{monthTotal.visit}} 회</td>
+                <th>총 수입</th>
+                <td>{{monthTotal.totalPay}} 원</td>                
+            </tr>
+        </table>
+      </div>      
+      <div>
+    </div>
+    </div>
+  </div>
+
+  
+<ng-template #content let-modal>    
+        <div class="deam" (click)="deamClick($event.target.classList.value,modal)">
+            <div id="surgery-detail">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-basic-title">{{prevTarget.day}}일 시술 리스트</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="surgery-detail-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>고객 이름</th>
+                                    <th>시술 내용</th>
+                                    <th>시술 금액</th>
+                                    <th>시술 시간</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                mat-tab-link   
+                                *ngFor="let target of targetSurgery;let idx = index;"
+                                style="position:relative;"
+                                >
+                                    <td>
+                                        {{target.customer_name}}
+                                    </td>
+                                    <td>
+                                        {{target.detail_name}}
+                                    </td>
+                                    <td>
+                                        {{addComma(target.pay)}} 원
+                                    </td>
+                                    <td>
+                                        {{target.his_time}}
+                                    </td>        
+                                </tr>                                
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="4">
+                                        일간 통계
+                                    </th>                                   
+                                </tr>
+                                <tr>
+                                    
+                                        <th>
+                                            일간 총 방문 횟수
+                                        </th>
+                                        <td>
+                                            {{targetSurgery.length}} 회
+
+                                        </td>
+                                        <th>
+                                            일간 총 시술 금액
+                                        </th>
+                                        <td>
+                                            {{dayTotalPay}}            원                                
+                                        </td>
+
+                                                                 
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>    
+                </div>
+                <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">취소</button>
+                    <button type="submit" class="btn btn-primary" id="addBtn">추가</button>
+                </div> -->
+            </div>
+        </div>    
+    
+</ng-template>
