@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
-
+  
   constructor(private http:HttpClient,private cookieService:CookieService,private router:Router) { }
   islogin = false;
   getUserDetails(userId,userPw) { 
@@ -16,8 +16,23 @@ export class AuthService {
     })         
   } 
 
+  pwCheck(pw){
+    
+    return this.http.post('http://localhost:3000/auth/pwcheck',{
+      pw
+    })      
+  }
+  pwchange(pw){
+    
+    return this.http.post('http://localhost:3000/auth/pwchange',{
+      pw
+    })      
+  }
+  
   isLoginCheck(){        
-    return this.cookieService.get('AdminLogin') == 'true';
+    
+    this.islogin = this.cookieService.get('AdminLogin') == 'true';
+    
   }
 
   changeUrl(url){    
@@ -31,9 +46,8 @@ export class AuthService {
   }
 
   getUserList(data){           
-    return this.http.get('http://localhost:3000/auth/callList?type='+data.type+'&id='+data.id);
+    return this.http.get('http://localhost:3000/auth/callList?type='+data.type+'&id='+data.id+'&page=2');
   }
-
 
   addUserData(data){
     return this.http.post('http://localhost:3000/auth/addcustomer',data);     

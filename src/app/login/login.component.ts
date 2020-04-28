@@ -12,7 +12,8 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
 
   constructor(private Auth: AuthService,private cookieService:CookieService,private router:Router) {
-    if(Auth.isLoginCheck()){
+    Auth.isLoginCheck();
+    if(Auth.islogin){
       
       router.navigate(['/main']);
     }

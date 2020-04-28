@@ -38,8 +38,7 @@ router.get('/getsurgerylist', function (req, res) {
     
     var data = req.query;    
     var resultJson = {};
-    var stmt = "select h.id,h.pay,date_format(history_date,'%d') as _day,date_format(history_date,'%r') as his_time,customer_name,detail_name from maindb.surgery_detail as sdet join (select h.id,h.pay,h.det_id,history_date,customer_name from maindb.customer_info as cus join  (SELECT history_id as id, customer_id as cus_id, history_pay as pay, detail_id as det_id, history_date FROM maindb.surgery_history where date_format(history_date,'%Y-%m-%d') between '"+data.first+"' and '"+data.last+"') as h on cus.customer_id = h.cus_id) as h on det_id = detail_id order by his_time asc";        
-    console.log(stmt);
+    var stmt = "select h.id,h.pay,date_format(history_date,'%d') as _day,date_format(history_date,'%r') as his_time,customer_name,detail_name from maindb.surgery_detail as sdet join (select h.id,h.pay,h.det_id,history_date,customer_name from maindb.customer_info as cus join  (SELECT history_id as id, customer_id as cus_id, history_pay as pay, detail_id as det_id, history_date FROM maindb.surgery_history where date_format(history_date,'%Y-%m-%d') between '"+data.first+"' and '"+data.last+"') as h on cus.customer_id = h.cus_id) as h on det_id = detail_id order by his_time asc";            
     connection.query(stmt, function (err, result) {        
         
         if(err) {     

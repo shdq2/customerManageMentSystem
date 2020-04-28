@@ -18,6 +18,9 @@ export class DetailComponent implements OnInit {
   isSelected:boolean;
   currentItem:any;
   modal:any;
+  currentPage = 1;
+  pageNation=[];
+
   ngOnInit(): void {    
     
     this.getSurgeryList();       
@@ -40,8 +43,29 @@ export class DetailComponent implements OnInit {
   }
   
   getHistoryList(){
+    this.pageNation = [];
     this.detail.getHistoryList(this.user_Info.customer_id).subscribe(data=>{
-      this.historyList = data;
+      var result = JSON.stringify(data);
+      
+      var resultJson = JSON.parse(result);      
+      var pageItem = [];
+      for(var i = (this.currentPage-1)*10 ; i <(this.currentPage*10-1)+1;i++){
+        if(resultJson.length == i){
+          break;
+        }
+        
+        resultJson[i].isSelected = false;        
+        pageItem.push(resultJson[i]);
+      }            
+      this.pageNation.push('');      
+      this.pageNation.push('');      
+      for(var i = 0 ; i  <resultJson.length/10;i++){          
+          this.pageNation.push(i+1);          
+      }      
+      this.pageNation.push('');
+      this.pageNation.push('');   
+      console.log(this.pageNation); 
+      this.historyList = pageItem;
       
     })
   }
@@ -119,5 +143,14 @@ export class DetailComponent implements OnInit {
   deamClick(target,content){
     if(target.indexOf('deam') != -1)
       content.close()
+  }
+  
+  pageChange(page){
+    this.currentPage = page;
+    this.getHistoryList();
+  }
+
+  prevnextBtn(idx){
+    this.pageChange(this.currentPage+idx);    
   }
 }

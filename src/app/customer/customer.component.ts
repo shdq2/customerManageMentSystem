@@ -27,20 +27,37 @@ export class CustomerComponent implements OnInit {
   modal = null;
   searchType="all";
   searchData="";
+  pageNation=[];
+  currentPage = 1;
   ngOnInit(): void {
     this.getUserList(this.defaultData);
   }
 
   getUserList(userData){
+    this.pageNation = [];
     this.Auth.getUserList(userData).subscribe(data=>{   
       
       var result = JSON.stringify(data);
       var resultJson = JSON.parse(result).result;
-      for(var i = 0 ; i <resultJson.length;i++){
+      var pageItem = [];
+      for(var i = (this.currentPage-1)*10 ; i <(this.currentPage*10-1)+1;i++){
+        if(resultJson.length == i){
+          break;
+        }
+        
         resultJson[i].isSelected = false;        
+        pageItem.push(resultJson[i]);
       }      
-      this.items = resultJson;    
+      this.items = pageItem;    
+      this.pageNation.push('');      
+      this.pageNation.push('');      
+      for(var i = 0 ; i  <resultJson.length/10;i++){          
+          this.pageNation.push(i+1);          
+      }      
+      this.pageNation.push('');
+      this.pageNation.push('');      
     }) 
+    
     this.isCheck = this.isMasterCheck;   
   }
   onChange(value){
@@ -80,9 +97,6 @@ export class CustomerComponent implements OnInit {
     }, (reason) => {
       
     });
-    
-    
-    
   }
   onSubmit(customerData,content){    
     var sendData = {
@@ -125,5 +139,14 @@ export class CustomerComponent implements OnInit {
   deamClick(target,content){
     if(target.indexOf('deam') != -1)
       content.close()
+  }
+
+  pageChange(page){
+    this.currentPage = page;
+    this.getUserList(this.defaultData);
+  }
+
+  prevnextBtn(idx){
+    this.pageChange(this.currentPage+idx);    
   }
 }

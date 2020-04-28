@@ -5,7 +5,7 @@
 </div>
 
 
-<div id="customer-main" >
+<div id="customer-main" *ngIf="historyList != null">
     <input type="button" value="수정" class="btn btn-warning" (click)="open(content)"/>
     <input type="button" value="시술 내역 추가" class="btn btn-primary" (click)="open(surgery)"/>
     <br />
@@ -116,6 +116,26 @@
             </td>
         </tr>
     </table>
+    <div class="pageNationDiv">
+        <ul class="pagination">                    
+            <li class="page-item"
+            [ngClass]="{disabled:currentPage == 1}"
+            ><a class="page-link" (click)="prevnextBtn(-1)" >Previous</a></li>
+            <li class="page-item numbering" [ngClass]="{disabled:pageNation[currentPage-1] == ''}"><a class="page-link" (click)="pageChange(currentPage-1)" >{{pageNation[currentPage-1]}}</a></li>
+            <li class="page-item numbering" [ngClass]="{disabled:pageNation[currentPage] == ''}"><a class="page-link" (click)="pageChange(currentPage-1)" >{{pageNation[currentPage]}}</a></li>
+            <li class="page-item numbering active" ><a class="page-link" (click)="pageChange(currentPage)">{{pageNation[currentPage+1]}}</a></li>
+            <li class="page-item numbering" [ngClass]="{disabled:pageNation[currentPage+2] == ''}"><a class="page-link" (click)="pageChange(currentPage+1)">{{pageNation[currentPage+2]}}</a></li>
+            <li class="page-item numbering" [ngClass]="{disabled:pageNation[currentPage+3] == ''}"><a class="page-link" (click)="pageChange(currentPage+1)">{{pageNation[currentPage+3]}}</a></li>
+            <!-- <li class="page-item" 
+                *ngFor="let page of pageNation"
+                [ngClass]="{active:page==currentPage}"
+                >
+                <a class="page-link" (click)="pageChange(page)">{{page}}</a>
+            </li>             -->
+            <li class="page-item"
+            [ngClass]="{disabled:pageNation[currentPage+3] == ''}"><a class="page-link" (click)="prevnextBtn(1)">Next</a></li>
+        </ul>         
+    </div>
 </div> 
 
 

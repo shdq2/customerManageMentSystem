@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {HomeService} from './../home.service';
 import {NgbModal,NgbModalModule} from '@ng-bootstrap/ng-bootstrap'
+import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
@@ -14,7 +16,14 @@ export class MainComponent{
   leapYear=[31,29,31,30,31,30,31,31,30,31,30,31];
   notLeapYear=[31,28,31,30,31,30,31,31,30,31,30,31];
   
-  constructor(private home:HomeService,private modalService:NgbModal) { }
+  constructor(private home:HomeService,private modalService:NgbModal,private Auth:AuthService,private router:Router) { 
+    Auth.isLoginCheck();
+    if(!Auth.islogin){
+      console.log("tes");
+      router.navigate(['/login']);
+    }
+
+  }
   today = new Date();
   first = new Date(this.today.getFullYear(), this.today.getMonth(),1);
   surgeryCount = {};
@@ -31,7 +40,10 @@ export class MainComponent{
     visit:0,
     totalPay:'0'
   };
-  
+
+  currentPage = 1;
+  pageNation=[];
+  selectDay = 0;
   addComma(num) {
     var regexp = /\B(?=(\d{3})+(?!\d))/g;
     return num.toString().replace(regexp, ',');
@@ -173,16 +185,41 @@ export class MainComponent{
     }    
     //target.activate = !target.activate;    
     if(target.count > 0){
-      this.targetSurgery= this.surgeryList[day];
+      this.currentPage = 1;
+      this.selectDay = day;
+      this.getSurgeryPagination(this.selectDay);
       for(var i = 0 ; i < this.targetSurgery.length;i++){
         this.dayTotalPay = (parseInt(this.dayTotalPay) + parseInt(this.targetSurgery[i].pay)) + "";
-        console.log(this.dayTotalPay + this.targetSurgery[i].pay);
+        
       }
       this.dayTotalPay = this.addComma(this.dayTotalPay);
       this.open(content);
     }    
   }
+  getSurgeryPagination(day){
+    
+    this.pageNation  = [];
 
+    var pageItem = [];
+    for(var i = (this.currentPage-1)*10 ; i <(this.currentPage*10-1)+1;i++){
+      if(this.surgeryList[day].length == i){
+        break;
+      }
+       
+      pageItem.push(this.surgeryList[day][i]);
+    }            
+
+    this.pageNation.push('');      
+    this.pageNation.push('');      
+    for(var i = 0 ; i  <this.surgeryList[day].length/10;i++){
+      this.pageNation.push(i+1);
+    }  
+    this.pageNation.push('');
+    this.pageNation.push('');   
+    
+
+    this.targetSurgery= pageItem;
+  }
   open(content){
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {      
       
@@ -194,5 +231,15 @@ export class MainComponent{
   deamClick(target,content){
     if(target.indexOf('deam') != -1)
       content.close()
+  }
+
+  pageChange(page){
+    this.currentPage = page;
+    this.getSurgeryPagination(this.selectDay);
+  }
+
+  prevnextBtn(idx){
+    this.pageChange(this.currentPage+idx);    
+    console.log(this.surgeryList);
   }
 }

@@ -18,8 +18,8 @@
 </div> -->
 <div class="top-bar">
   <div class="top-bar-menu-container">
-    <div class="top-bar-menu-item" *ngIf="islogin">
-      <button style="border:0px solid;" (click)="dropdown()">
+    <div class="top-bar-menu-item" *ngIf="Auth.islogin">
+      <button style="border:0px solid;" (click)="dropdown(0)">
         메뉴
       </button>
       <div class="dropdown-menu" id="menu-dropdown">
@@ -27,16 +27,25 @@
         <a mat-tab-link class="dropdown-item" [routerLink]="['customer']" (click)="menuControl(1,$event)">고객관리</a>        
       </div>
     </div>
-    <div class="top-bar-menu-item">
+    <div class="top-bar-menu-item" [routerLink]="['login']" *ngIf="!Auth.islogin">
       로그인 
+    </div>
+    <div class="top-bar-menu-item" *ngIf="Auth.islogin" style="position:relative;">
+      <button style="border:0px solid;" (click)="dropdown(1)">
+        관리자 메뉴
+      </button>
+      <div class="dropdown-menu" id="menu-dropdown2">
+        <a mat-tab-link class="dropdown-item"(click)="open(content)">비밀번호 변경</a>
+        <a mat-tab-link class="dropdown-item" [routerLink]="['customer']" (click)="menuControl(1,$event)">메뉴 추가</a>        
+        <a mat-tab-link class="dropdown-item" (click)="logout()">로그아웃</a>        
+      </div>
     </div>
     <div class="top-bar-menu-item">
       도움말
     </div>
   </div>
 </div>
-
-<div *ngIf="islogin" id="menu-container">    
+<div *ngIf="Auth.islogin" id="menu-container">    
   <nav mat-tab-nav-bar >
     <div
       mat-tab-link
@@ -68,6 +77,53 @@
     <router-outlet></router-outlet>
   </div>
 
-  <script>
-    console.log($(window));
-  </script>
+  <ng-template #content let-modal>
+    
+    <form (submit)="onSubmit(modal)" id="customer_info_form" method="post">    
+    <div class="deam" (click)="deamClick($event.target.classList.value,modal)">
+        <div id="add-customer">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-basic-title">관리자 비밀번호 변경</h4>
+                <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="add-customer-body">
+                    <table id="add-customer-section">
+                      <tr>
+                        <th>
+                          현재 비밀번호
+                        </th>
+                        <td>
+                          <input type="password" placeholder="현재 비밀번호 입력" id="currentPw" [(ngModel)]="currentPw" [ngModelOptions]="{standalone: true}"/>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>
+                          변경 비밀번호
+                        </th>
+                        <td>
+                          <input type="password" placeholder="변경 비밀번호 입력" id="changePw" [(ngModel)]="changePwTxt" [ngModelOptions]="{standalone: true}" [ngClass]="{danger:changePwTxt == '' || changePwTxt != changePwTxt2}" #changePw/>
+                        </td>
+                      </tr>            
+                      <tr>
+                        <th>
+                          변경 비밀번호 확인
+                        </th>
+                        <td>
+                          <input type="password" placeholder="변경 비밀번호 확인" id="changePw2" [(ngModel)]="changePwTxt2" [ngModelOptions]="{standalone: true}" [ngClass]="{danger:changePwTxt2 == '' || changePwTxt != changePwTxt2}" #changePw2/>
+                        </td>
+                      </tr>            
+                    </table>
+                </div>    
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">취소</button>
+                <button type="submit" class="btn btn-primary" id="addBtn" >변경</button>
+            </div>
+        </div>
+        
+    </div>
+</form>
+</ng-template>

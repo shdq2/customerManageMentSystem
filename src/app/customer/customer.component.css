@@ -38,3 +38,23 @@ button:focus,input[type="button"]{
     height:100%;
     background-color:rgba(0,0,0,0.6);
 }
+
+.pageNationDiv{
+    position:relative;
+}
+
+.pagination{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+}
+
+.numbering{
+    width:33.81px;
+    height:38px;
+}
+
+.numbering .page-link{
+    width:34.8px;
+    height:38px;
+}

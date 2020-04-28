@@ -28,10 +28,49 @@ router.post('/login', function (req, res) {
     })
 });
   
+router.post('/pwcheck',function(req,res){
+    if(connection == null){
+        connection = mysql_dbc.get();
+    }
+    var data = req.body;
+    console.log(data.pw);
+    var stmt = 'select * from auth_admin where auth_id = \'admin\' and auth_pw = \''+md5(data.pw)+'\'';
+    
+    connection.query(stmt, function (err, result) {
+        res.json(result);
+    })
+})
+
+router.post('/pwchange',function(req,res){
+    if(connection == null){
+        connection = mysql_dbc.get();
+    }
+    var data = req.body;    
+    var stmt = 'update maindb.auth_admin set auth_pw=md5(\''+data.pw+'\') where auth_id="admin";';
+    var resultJson = {};
+    console.log(md5(data.pw) + " / " + md5(md5(data.pw)));
+    connection.query(stmt, function (err, result) {                
+        if(err) {     
+            resultJson.id = data.id;       
+            resultJson.err = err;
+            
+            // res.json(err);
+        }else{
+            resultJson.id = data.id;       
+            resultJson.result = result;            
+            //   res.json(result);
+        }   
+        
+        res.json(resultJson);
+    })
+})
+
 router.get('/callList',function(req,res){    
     if(connection == null){
         connection = mysql_dbc.get();
     }
+    var data = req.query;
+    console.log(data);
     var stmt = 'select * from customer_info';      
     
     switch(req.query.type){
