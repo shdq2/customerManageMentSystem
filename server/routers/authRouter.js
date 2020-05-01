@@ -70,9 +70,9 @@ router.get('/callList',function(req,res){
         connection = mysql_dbc.get();
     }
     var data = req.query;
-    console.log(data);
-    var stmt = 'select * from customer_info';      
     
+    var stmt = 'select * from customer_info';      
+    var resultJson = {};
     switch(req.query.type){
         case 'all':
             stmt = 'select * from customer_info';      
@@ -92,10 +92,18 @@ router.get('/callList',function(req,res){
     }
     
     connection.query(stmt, function (err, result) {   
+        if(err) {     
+            resultJson.id = data.id;       
+            resultJson.err = err;
+            
+            // res.json(err);
+        }else{
+            resultJson.id = data.id;       
+            resultJson.result = result;            
+            //   res.json(result);
+        }   
         
-        res.json({
-            result:result
-        })            
+        res.json(resultJson);  
     })
 })
 
@@ -104,14 +112,18 @@ router.post('/addcustomer', function (req, res) {
         connection = mysql_dbc.get();
     }
     var data = req.body;    
-    
+    var resultJson = {};
     var stmt = 'insert into maindb.customer_info(customer_name,customer_addr,customer_phone,customer_date) values(\''+data.name+'\',\''+data.addr+'\',\''+data.phone+'\',now())';        
     connection.query(stmt, function (err, result) {
-        if(err) {            
-            res.json(err);
+        if(err) {                 
+            resultJson.err = err;            
+            // res.json(err);
         }else{            
-            res.json(result);
-        }
+            resultJson.result = result;            
+            //   res.json(result);
+        }   
+        
+        res.json(resultJson);  
         
     })
   });

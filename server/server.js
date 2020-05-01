@@ -6,6 +6,7 @@ const app = express();
 const auth = require('./routers/authRouter');
 const detail = require('./routers/detailRouter');
 const home = require('./routers/homeRouter');
+const surgery = require('./routers/surgeryRouter');
 const cors = require('cors');
 var cookie = require('cookie-parser');
 
@@ -22,6 +23,7 @@ mysql_dbc.test_open(connection);
 app.use('/auth',auth);
 app.use('/detail',detail);
 app.use('/home',home);
+app.use('/surgery',surgery);
 app.get('/pageChange/:url',(req,res)=>{
     console.log(req.params.url);
     res.redirect('/#/'+req.params.url);

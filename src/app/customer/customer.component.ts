@@ -20,7 +20,10 @@ export class CustomerComponent implements OnInit {
     private Auth:AuthService,
     private router:Router
     ) { 
-    
+    Auth.isLoginCheck();
+    if(!Auth.islogin){      
+      router.navigate(['/login']);
+    }
   }
   closeResult = '';
   isCheck = false;

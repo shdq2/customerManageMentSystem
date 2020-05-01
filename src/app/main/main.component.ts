@@ -18,8 +18,7 @@ export class MainComponent{
   
   constructor(private home:HomeService,private modalService:NgbModal,private Auth:AuthService,private router:Router) { 
     Auth.isLoginCheck();
-    if(!Auth.islogin){
-      console.log("tes");
+    if(!Auth.islogin){      
       router.navigate(['/login']);
     }
 
@@ -138,6 +137,7 @@ export class MainComponent{
               date.day = cnt+'';
               
               if(this.monthCount[cnt] != undefined){
+                console.log(this.monthCount[cnt]);
                 date.count = this.monthCount[cnt];
               }
               if(cnt == this.today.getDate()){                  

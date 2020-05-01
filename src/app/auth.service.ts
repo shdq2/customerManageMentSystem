@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 export class AuthService {
   
   constructor(private http:HttpClient,private cookieService:CookieService,private router:Router) { }
-  islogin = false;
+  islogin = true;
   getUserDetails(userId,userPw) { 
     
     return this.http.post('http://localhost:3000/auth/login',{
@@ -22,17 +22,14 @@ export class AuthService {
       pw
     })      
   }
-  pwchange(pw){
-    
+  pwchange(pw){    
     return this.http.post('http://localhost:3000/auth/pwchange',{
       pw
     })      
   }
   
-  isLoginCheck(){        
-    
-    this.islogin = this.cookieService.get('AdminLogin') == 'true';
-    
+  isLoginCheck(){            
+    this.islogin = this.cookieService.get('AdminLogin') == 'true';    
   }
 
   changeUrl(url){    

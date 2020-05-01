@@ -26,6 +26,10 @@ button:focus,input[type="button"]{
     width:85%;
 }
 
+.category{
+    width: 50% !important;
+    display:inline-block !important;
+}
 
 #surgery_menu {
     position:absolute;

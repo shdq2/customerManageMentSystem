@@ -1,8 +1,9 @@
 import { Component, OnInit, ɵConsole } from '@angular/core';
 import {DeatilService} from './../deatil.service';
+import {AuthService} from './../auth.service';
 import {NgbModal,NgbModalModule} from '@ng-bootstrap/ng-bootstrap'
 import {Router, ActivatedRoute} from '@angular/router'
-import {CommonModule} from '@angular/common';
+
 @Component({
   selector: 'app-customer-detail',
   templateUrl: './detail.component.html',
@@ -10,7 +11,12 @@ import {CommonModule} from '@angular/common';
 })
 export class DetailComponent implements OnInit {
   isUpdateStatus=false;
-  constructor(private modalService: NgbModal,private detail:DeatilService,private router:Router,private route:ActivatedRoute) { }
+  constructor(private modalService: NgbModal,private detail:DeatilService,private router:Router,private route:ActivatedRoute,private Auth:AuthService) { 
+    Auth.isLoginCheck();
+    if(!Auth.islogin){      
+      router.navigate(['/login']);
+    }
+  }
   user_Info:any;
   surgeryList:any;
   surgeryDeatilList:any;
@@ -37,8 +43,18 @@ export class DetailComponent implements OnInit {
   }
 
   getSurgeryList(){
-    this.detail.getSurgeryList().subscribe(data=>{
-      this.surgeryList = data;
+    this.detail.getSurgeryList().subscribe(data=>{      
+      var result = JSON.stringify(data);      
+      var resultJson = JSON.parse(result).result;    
+      var resultData = [];
+      for(var i = 0 ; i < resultJson.length;i++){
+        
+        if(resultJson[i].surgery_use == "1"){
+          
+          resultData.push(resultJson[i])
+        }
+      }
+      this.surgeryList = resultData;
     })
   }
   
@@ -47,7 +63,7 @@ export class DetailComponent implements OnInit {
     this.detail.getHistoryList(this.user_Info.customer_id).subscribe(data=>{
       var result = JSON.stringify(data);
       
-      var resultJson = JSON.parse(result);      
+      var resultJson = JSON.parse(result).result;      
       var pageItem = [];
       for(var i = (this.currentPage-1)*10 ; i <(this.currentPage*10-1)+1;i++){
         if(resultJson.length == i){
@@ -64,7 +80,7 @@ export class DetailComponent implements OnInit {
       }      
       this.pageNation.push('');
       this.pageNation.push('');   
-      console.log(this.pageNation); 
+      
       this.historyList = pageItem;
       
     })
@@ -77,7 +93,15 @@ export class DetailComponent implements OnInit {
       this.isSelected = false;
     else{
       this.detail.getSurgeryDetailList(value).subscribe(data=>{
-        this.surgeryDeatilList = data;
+        var result = JSON.stringify(data);      
+        var resultJson = JSON.parse(result).result;  
+        var resultData = [];
+        for(var i = 0 ; i < resultJson.length;i++){          
+          if(resultJson[i].detail_use == "1"){            
+            resultData.push(resultJson[i])
+          }
+        }
+        this.surgeryDeatilList = resultData;
       })
     }
     

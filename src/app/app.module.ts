@@ -12,6 +12,7 @@ import {CommonModule} from '@angular/common';
 import { DetailComponent } from './detail/detail.component'
 import {jqxBarGaugeModule} from 'jqwidgets-ng/jqxbargauge';
 import { CalendarComponent } from './calendar/calendar.component';
+import { MenuComponent } from './menu/menu.component';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { CalendarComponent } from './calendar/calendar.component';
     LoginComponent,
     CustomerComponent,
     DetailComponent,
-    CalendarComponent
+    CalendarComponent,
+    MenuComponent
   ],
   imports: [
     BrowserModule,

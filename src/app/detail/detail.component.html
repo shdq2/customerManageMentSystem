@@ -218,7 +218,7 @@
                                     시술 종류
                                 </td>
                                 <td class="add-customer-section-input">
-                                    <select id="surgery_category" (change)="surgeryChange($event.target.value)">
+                                    <select id="surgery_category" (change)="surgeryChange($event.target.value)" class="form-control category">
                                         <option selected value="0">
                                             옵션을 선택해주세요
                                         </option>
@@ -231,7 +231,7 @@
                                         </option>
                                         
                                     </select>
-                                    <select id="surgery_category_detail" *ngIf="isSelected" (change)="detailChange($event.target.value)">
+                                    <select id="surgery_category_detail" *ngIf="isSelected" (change)="detailChange($event.target.value)" class="form-control category">
                                         <option selected value="0">
                                             옵션을 선택해주세요
                                         </option>
@@ -250,7 +250,7 @@
                                     원가
                                 </td>
                                 <td class="add-customer-section-input">
-                                    <label>{{currentItem.detail_pay}}</label>
+                                    <label>{{addComma(currentItem.detail_pay)}} 원</label>
                                 </td>
                             </tr>
                             <tr>
@@ -265,8 +265,8 @@
                                 <td>
                                     결제방법
                                 </td>
-                                <td class="add-customer-section-input">
-                                    <select id="surgery_pay_type"  >
+                                <td class="add-customer-section-input" >
+                                    <select id="surgery_pay_type"  class="form-control">
                                         <option selected value="카드">
                                             카드
                                         </option>

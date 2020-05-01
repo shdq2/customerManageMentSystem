@@ -25,6 +25,7 @@
       <div class="dropdown-menu" id="menu-dropdown">
         <a mat-tab-link class="dropdown-item" [routerLink]="['main']" (click)="menuControl(0,$event)">홈</a>
         <a mat-tab-link class="dropdown-item" [routerLink]="['customer']" (click)="menuControl(1,$event)">고객관리</a>        
+        <a mat-tab-link class="dropdown-item" [routerLink]="['menu']" (click)="menuControl(2,$event)">메뉴관리</a>        
       </div>
     </div>
     <div class="top-bar-menu-item" [routerLink]="['login']" *ngIf="!Auth.islogin">
@@ -35,8 +36,7 @@
         관리자 메뉴
       </button>
       <div class="dropdown-menu" id="menu-dropdown2">
-        <a mat-tab-link class="dropdown-item"(click)="open(content)">비밀번호 변경</a>
-        <a mat-tab-link class="dropdown-item" [routerLink]="['customer']" (click)="menuControl(1,$event)">메뉴 추가</a>        
+        <a mat-tab-link class="dropdown-item"(click)="open(content)">비밀번호 변경</a>        
         <a mat-tab-link class="dropdown-item" (click)="logout()">로그아웃</a>        
       </div>
     </div>
@@ -67,7 +67,19 @@
     >
      
       <label class="main-menu-label">
-        고객관리
+        고객 관리
+      </label>
+      
+    </div>
+    <div
+      mat-tab-link      
+      [routerLink]="['menu']" 
+      (click)="menuControl(2,$event)"
+      class="main-menu"
+    >
+     
+      <label class="main-menu-label">
+        메뉴 관리
       </label>
       
     </div>

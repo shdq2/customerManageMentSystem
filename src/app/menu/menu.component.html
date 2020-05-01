@@ -1,0 +1,274 @@
+<div>
+    <h1>시술 관리</h1>
+    <hr /> 
+</div>
+
+
+
+<div class="menu-body">
+    <div class="menu-title">
+        <input type="button" value="시술 추가" class="btn menu-btn" [ngClass]="{active:currentIdx == 0}" (click)="onBtnCheck(0)"/>
+        <input type="button" value="시술 삭제" class="btn menu-btn" [ngClass]="{active:currentIdx == 1}" (click)="onBtnCheck(1)"/>
+        <input type="button" value="시술 수정" class="btn menu-btn" [ngClass]="{active:currentIdx == 2}" (click)="onBtnCheck(2)"/>
+    </div>
+    <div class="menu-content">
+        <div class="addMenu" *ngIf="currentIdx == 0">
+            <div class="title-box">
+                <h3>시술 타이틀 추가</h3>
+                <div style="display:inline-block;width:100%;">
+                    <input type="text" placeholder="시술 타이틀 이름" class="form-control box" #title/>
+                    <input type="button" class="btn btn-primary box" value="추가" (click)="onAddTitle(title)"/>
+                </div>            
+            </div>            
+            <hr />
+            <div class="title-detail-box">
+                <h3>시술 목록 추가</h3>
+                <div style="display:inline-block;width:100%;">
+                    <form method="post" action="http://localhost:3000/surgery/addsurgery" (submit)="onAddSurgery($event)" id="addform" #form>
+                        <table class="table">
+                            <tr>
+                                <th>
+                                    <label>시술 타이틀</label>
+                                </th>
+                                <td>
+                                    <select [(ngModel)]="addData.title" [ngModelOptions]="{standalone: true}" class="form-control">
+                                        <option
+                                            mat-tab-link 
+                                            *ngFor="let surgery of surgeryList"
+                                            value="{{surgery.surgery_id}}"
+                                        >
+                                            {{surgery.surgery_name}}
+                                        </option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <label>시술 이름</label>
+                                </th>
+                                <td>
+                                    <input type="text" placeholder="시술 이름" class="form-control box" [(ngModel)]="addData.name" [ngModelOptions]="{standalone: true}"/>                    
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <label>시술 금액</label>
+                                </th>
+                                <td>
+                                    <input type="text" placeholder="시술 금액" class="form-control box" [(ngModel)]="addData.pay" [ngModelOptions]="{standalone: true}"/>                    
+                                </td>
+                            </tr>
+                        </table>
+                        <input type="submit" class="btn btn-primary" value="추가" style="float:right"/>
+                    </form>
+                    
+                </div>        
+            </div>
+        </div>
+        <div class="deleteMenu" *ngIf="currentIdx == 1">
+            <div class="menuSideBar">
+                
+                <button type="button" class="btn side-btn" [ngClass]="{active:deleteSelectMenu == 0}" (click)="deleteSelect(0)">제목</button>
+                <button type="button" class="btn side-btn" [ngClass]="{active:deleteSelectMenu == 1}" (click)="deleteSelect(1)">시술</button>
+            </div>
+            <div class="menuRight">
+                <table class="table" *ngIf="deleteSelectMenu == 0">
+                    <tr>
+                        <th>
+                            타이틀
+                        </th>
+                        <th>
+                            사용여부
+                        </th>
+                        <th>
+                            강제삭제
+                        </th>
+                    </tr>
+                    <tr
+                        mat-tab-link 
+                        *ngFor="let surgery of surgeryList;let idx = index;"
+                        
+                        >
+                        <td>
+                            {{surgery.surgery_name}}
+                        </td>
+                        <td style="position:relative;">
+                            <div class="switchSection" [ngClass]="{active:surgery.surgery_use}" (click)="onDeleteUseBtn(idx)">
+                                <span class="switchBar">
+                                    
+                                </span>                                
+                            </div>
+                        </td>
+                        <td>
+                            <input type="button" class="btn btn-danger" value="강제삭제" (click)="open(content,surgery)"/>
+                        </td>
+                    </tr>
+                </table>
+                <table class="table" *ngIf="deleteSelectMenu == 1">
+                    <tr>
+                        <th>
+                            타이틀
+                        </th>
+                        <th>
+                            <select [(ngModel)]="addData.title" [ngModelOptions]="{standalone: true}" (change)="titleChange($event.target.value)" class="form-control">
+                                <option
+                                    mat-tab-link 
+                                    *ngFor="let surgery of surgeryList"
+                                    value="{{surgery.surgery_id}}"
+                                    
+                                >
+                                    {{surgery.surgery_name}}
+                                </option>
+                            </select>
+                        </th>
+                        <th>
+                            강제삭제
+                        </th>
+                    </tr>
+                    <tr
+                        mat-tab-link 
+                        *ngFor="let surgery of deleteItemList;let idx = index;"
+                        id="surgery.detail_id"
+                        >
+                        <td>
+                            {{surgery.detail_name}}
+                        </td>
+                        <td style="position:relative;">
+                            <div class="switchSection" [ngClass]="{active:surgery.detail_use}" (click)="onDeleteUseBtn(idx)">
+                                <span class="switchBar">
+                                    
+                                </span>                                
+                            </div>
+                        </td>
+                        <td>
+                            <input type="button" class="btn btn-danger" value="강제삭제" (click)="open(content,surgery)"/>
+                        </td>
+                    </tr>
+                </table>
+                
+            
+            </div>
+        </div>
+
+        <div class="modifyMenu" *ngIf="currentIdx == 2">
+            <div class="menuSideBar">
+                
+                <button type="button" class="btn side-btn" [ngClass]="{active:deleteSelectMenu == 0}" (click)="deleteSelect(0)">제목</button>
+                <button type="button" class="btn side-btn" [ngClass]="{active:deleteSelectMenu == 1}" (click)="deleteSelect(1)">시술</button>
+            </div>
+            <div class="menuRight">
+                <table class="table" *ngIf="deleteSelectMenu == 0">
+                    <tr>
+                        <th>
+                            타이틀
+                        </th>
+                        <th>
+                            이름 변경
+                        </th>
+                    </tr>
+                    <tr
+                        mat-tab-link 
+                        *ngFor="let surgery of surgeryList;let idx = index;"
+                        
+                        >
+                        <td>
+                            {{surgery.surgery_name}}
+                        </td>
+                        <td style="position:relative;">
+                           <input type="text" class="form-control modify_name" placeholder="이름 변경" #test>
+                           <input type="button" class="btn btn-primary modify_btn" value="변경" (click)="updateSurgeryName(idx,test)">
+                        </td>
+                    </tr>
+                </table>
+                <table class="table" *ngIf="deleteSelectMenu == 1">
+                    <tr>
+                        <th colspan="2">
+                            타이틀
+                        </th>
+                        <th colspan="2">
+                            <select [(ngModel)]="addData.title" [ngModelOptions]="{standalone: true}" (change)="titleChange($event.target.value)" class="form-control">
+                                <option
+                                    mat-tab-link 
+                                    *ngFor="let surgery of surgeryList"
+                                    value="{{surgery.surgery_id}}"
+                                    
+                                >
+                                    {{surgery.surgery_name}}
+                                </option>
+                            </select>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            이름
+                        </th>
+                        <th>
+                            금액
+                        </th>
+                        <th>
+                            타이틀
+                        </th>
+                        <th>
+                            비고
+                        </th>
+                    </tr>
+                    <tr
+                        mat-tab-link 
+                        *ngFor="let surgery of deleteItemList;let idx = index;"
+                        id="surgery.detail_id"
+                        >
+                        <td>
+                            <input type="text" value="{{surgery.detail_name}}" class="form-control" #name/>
+                        </td>
+                        <td style="position:relative;">
+                            <input type="text" value="{{surgery.detail_pay}}" class="form-control" #pay/>
+                        </td>
+                        <td style="position:relative;">
+                            <select class="form-control" #title [(ngModel)]="deleteItemList[idx].surgery_id">
+                                <option
+                                    mat-tab-link 
+                                    *ngFor="let surgery of surgeryList"
+                                    value="{{surgery.surgery_id}}"                                    
+                                >
+                                    {{surgery.surgery_name}}
+                                </option>
+                            </select>
+                        </td>
+                        <td style="position:relative;">
+                            <input type="button" value="변경" class="btn btn-primary" (click)="updateDetailData(name,pay,title,surgery.detail_id)"/>
+                        </td>
+                    </tr>
+                </table>
+                
+            
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #content let-modal>
+    <form  id="surgery_form">    
+        <div class="deam" (click)="deamClick($event.target.classList.value,modal)">
+            <div id="surgery_menu">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-basic-title">강제 삭제</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="add-customer-body">                        
+                        정말로 강제삭제 하시겠습니까?
+                        <p style="color:red;"> ※ 고객 이용 목록에서 해당 시술 내용이 모두 삭제됩니다. </p>
+                        <p style="color:red;"> ※ 강제 삭제시 데이터를 복구할 수 없습니다. </p>
+                    </div>    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark" (click)="modal.close('cancel')">취소</button>
+                    <button type="submit" class="btn btn-danger" id="addBtn" (click)="modal.close('delete')">삭제</button>
+                </div>
+            </div>        
+        </div>
+    
+    </form>
+</ng-template>

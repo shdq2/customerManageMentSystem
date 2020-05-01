@@ -131,6 +131,13 @@
 
 
   /**************************/
+
+  #prev{
+    transform:rotate(180deg) !important;
+  }
+  #next{
+    right:0;
+  }
     #prev-div,#next-div{
         height:100%;
         position:absolute;
@@ -199,3 +206,24 @@
     width:34.8px;
     height:38px;
 }
+
+.arrow{
+  width:100%;    
+  position:relative;
+  border:0;  
+}
+
+
+.arrow::after{
+  content:"";
+  display: block;
+  width:17px;
+  height:17px;
+  border-top:4px solid #333;
+  border-right:4px solid #333;
+  -webkit-transform: rotate(45deg) translateY(-50%);
+  transform: rotate(45deg)  translateY(-50%);
+  position: absolute;
+  right:10px;
+  top:50%;    
+}   
