@@ -1,0 +1,12 @@
+<div mat-dialog-content style="max-width:300px;">
+    <p>{{data.name}} 님의 </p>
+    <p>{{data.date}} 시술을 </p>
+    <p style="font-size:20px; color:red">
+        정말 삭제하시겠습니까?        
+    </p>
+  
+</div>
+<div mat-dialog-actions>
+  <button mat-button class="form-control btn btn-warning" style="width:50%;" (click)="onClick(false)">No</button>
+  <button mat-button class="form-control btn btn-danger"  style="width:50%;" (click)="onClick(true)" cdkFocusInitial>Ok</button>
+</div>

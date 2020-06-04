@@ -1,9 +1,15 @@
-import { Component, OnInit, ɵConsole } from '@angular/core';
+import { Component, OnInit, ɵConsole, Inject } from '@angular/core';
 import {DeatilService} from './../deatil.service';
 import {AuthService} from './../auth.service';
 import {NgbModal,NgbModalModule} from '@ng-bootstrap/ng-bootstrap'
 import {Router, ActivatedRoute} from '@angular/router'
 import { FormControl } from '@angular/forms';
+import {MatDialog, MatDialogRef,MAT_DIALOG_DATA} from '@angular/material/dialog'
+
+export interface DialogData{
+  name:string;
+  date:string;
+}
 
 @Component({
   selector: 'app-customer-detail',
@@ -12,7 +18,7 @@ import { FormControl } from '@angular/forms';
 })
 export class DetailComponent implements OnInit {
   isUpdateStatus=false;
-  constructor(private modalService: NgbModal,private detail:DeatilService,private router:Router,private route:ActivatedRoute,private Auth:AuthService) { 
+  constructor(private modalService: NgbModal,private detail:DeatilService,private router:Router,private route:ActivatedRoute,private Auth:AuthService,public dialog:MatDialog) { 
     Auth.isLoginCheck();
     if(!Auth.islogin){      
       router.navigate(['/login']);
@@ -201,8 +207,31 @@ export class DetailComponent implements OnInit {
     this.date = date;    
   }
   removeHistory(history){
-    this.detail.removeHistory(history.hisId).subscribe(data=>{
-      this.getHistoryList();      
+    const dialogRef = this.dialog.open(Dialog,
+      {
+        data:{name:this.user_Info.customer_name,date:history.his_date}
+      });
+    dialogRef.afterClosed().subscribe(result=>{
+      if(result){
+        this.detail.removeHistory(history.hisId).subscribe(data=>{
+          this.getHistoryList();      
+        })    
+      }      
     })
   }
+}
+
+@Component({
+  selector:'dialog-message',
+  templateUrl:'dialog.html',
+  styleUrls: ['./detail.component.css', "../../../node_modules/bootstrap/dist/css/bootstrap.min.css"]
+})
+export class Dialog{
+  test:any;
+  constructor(public dialogRef:MatDialogRef<Dialog>,
+    @Inject(MAT_DIALOG_DATA) public data: string){console.log(data);}
+  onClick(val){
+    this.dialogRef.close(val);
+  }
+  
 }

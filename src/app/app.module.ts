@@ -15,7 +15,10 @@ import { CalendarComponent } from './calendar/calendar.component';
 import { MenuComponent } from './menu/menu.component';
 import {MatDatepickerModule} from '@angular/material/datepicker'
 import {MatNativeDateModule} from '@angular/material/core';
+import {MatDialogModule} from '@angular/material/dialog'
+import {MatButtonModule} from '@angular/material/button'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,7 +39,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     jqxBarGaugeModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    
+    MatDialogModule,
+    MatButtonModule,
     BrowserAnimationsModule
   ],
   providers: [],
