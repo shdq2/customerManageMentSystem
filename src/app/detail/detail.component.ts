@@ -3,6 +3,7 @@ import {DeatilService} from './../deatil.service';
 import {AuthService} from './../auth.service';
 import {NgbModal,NgbModalModule} from '@ng-bootstrap/ng-bootstrap'
 import {Router, ActivatedRoute} from '@angular/router'
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-customer-detail',
@@ -26,9 +27,18 @@ export class DetailComponent implements OnInit {
   modal:any;
   currentPage = 1;
   pageNation=[];
-
+  date:any;
+  
+  currentHour:any;
+  currentTime:any;
   ngOnInit(): void {    
-    
+    this.currentHour = new Date().getHours();
+    this.currentTime = 0;
+    if(this.currentHour > 12){
+      this.currentHour -= 12;
+      this.currentTime = 1;
+    }
+    console.log(this.currentHour);
     this.getSurgeryList();       
     this.getUserData(); 
     this.isSelected = false;
@@ -87,7 +97,7 @@ export class DetailComponent implements OnInit {
   }
 
   surgeryChange(value){
-    console.log(value);
+    
     this.isSelected = true;
     if(value == 0)
       this.isSelected = false;
@@ -125,7 +135,8 @@ export class DetailComponent implements OnInit {
   }
 
   open(content){
-    this.modal = content;
+    this.modal = content;    
+    this.date = new FormControl(new Date());
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {      
       
     }, (reason) => {
@@ -149,20 +160,28 @@ export class DetailComponent implements OnInit {
     //this.Auth.pageReload('customer')    
   }
 
-  addHistory(customerData,content){
+  addHistory(customerData,content){    
+    var d = new Date(this.date.value);
+    var time = customerData.querySelector('input[name=time]:checked').value;
+    var hour = customerData.querySelector('#hour').value;
+    var min = customerData.querySelector('#min').value;
+    if(time == 1){
+      hour = parseInt(hour)+12;
+    }
+    var date = d.getFullYear() + "/"+(d.getMonth()+1) + "/"+d.getDay()+" " +hour+":"+min;
+    
     var sendData = {
       id:this.user_Info.customer_id,
       category:this.currentItem.detail_id,
       pay:customerData.querySelector('#money').value,
       type:customerData.querySelector('#surgery_pay_type').value,
       memo:customerData.querySelector('#memo').value,
-    }
-    console.log(sendData);
-    console.log(this.currentItem)
+      time:date
+    }    
     this.detail.addHistory(sendData).subscribe(data=>{
       content.close();
       this.ngOnInit();
-    });    
+    });
   }
   deamClick(target,content){
     if(target.indexOf('deam') != -1)
@@ -176,5 +195,14 @@ export class DetailComponent implements OnInit {
 
   prevnextBtn(idx){
     this.pageChange(this.currentPage+idx);    
+  }
+
+  dateChange(date){
+    this.date = date;    
+  }
+  removeHistory(history){
+    this.detail.removeHistory(history.hisId).subscribe(data=>{
+      this.getHistoryList();      
+    })
   }
 }

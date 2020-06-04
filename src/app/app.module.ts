@@ -13,8 +13,9 @@ import { DetailComponent } from './detail/detail.component'
 import {jqxBarGaugeModule} from 'jqwidgets-ng/jqxbargauge';
 import { CalendarComponent } from './calendar/calendar.component';
 import { MenuComponent } from './menu/menu.component';
-
-
+import {MatDatepickerModule} from '@angular/material/datepicker'
+import {MatNativeDateModule} from '@angular/material/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,7 +34,10 @@ import { MenuComponent } from './menu/menu.component';
     FormsModule,
     CommonModule,
     jqxBarGaugeModule,
-
+    MatDatepickerModule,
+    MatNativeDateModule,
+    
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

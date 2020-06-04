@@ -113,10 +113,10 @@ router.get('/getHistoryList',function(req,res){
     
     var data=req.query;
     var resultJson = {};
-    var stmt = 'select det.detail_name,det.detail_pay,his.pay,date_format(his.his_date,"%Y-%m-%d %h:%i") as his_date,his.his_type,his.memo from maindb.surgery_detail as det '+
-    'join ( SELECT  his.history_id, his.history_pay as pay, cus.customer_name as name, his.detail_id as det_id, his.history_date as his_date, his.history_type as his_type,'+
+    var stmt = 'select det.detail_name,det.detail_pay,his.pay,hisId,date_format(his.his_date,"%Y-%m-%d %h:%i") as his_date,his.his_type,his.memo from maindb.surgery_detail as det '+
+    'join ( SELECT  his.history_id as hisId, his.history_pay as pay, cus.customer_name as name, his.detail_id as det_id, his.history_date as his_date, his.history_type as his_type,'+
         'his.history_memo as memo FROM maindb.surgery_history AS his join maindb.customer_info AS cus ON his.customer_id = cus.customer_id '+
-    'where his.customer_id = \''+data.id+'\') as his on det.detail_id = his.det_id'
+    'where his.customer_id = \''+data.id+'\') as his on det.detail_id = his.det_id order by his_date'
     connection.query(stmt,function(err,result){
         if(err) {     
             resultJson.id = data.id;       
@@ -140,7 +140,7 @@ router.post('/addHistory',function(req,res){
     
     var data=req.body;
     var resultJson = {}
-    var stmt = 'insert into surgery_history(customer_id,history_pay,detail_id,history_date,history_type,history_memo) values(\''+data.id+'\',\''+data.pay+'\',\''+data.category+'\',now(),\''+data.type+'\',\''+data.memo+'\')';        
+    var stmt = 'insert into surgery_history(customer_id,history_pay,detail_id,history_date,history_type,history_memo) values(\''+data.id+'\',\''+data.pay+'\',\''+data.category+'\',\''+data.time+'\',\''+data.type+'\',\''+data.memo+'\')';        
     connection.query(stmt, function (err, result) {
         if(err) {     
             resultJson.id = data.id;       
@@ -157,4 +157,30 @@ router.post('/addHistory',function(req,res){
         
     })
 })
+
+router.post('/removeHistory',function(req,res){
+    if(connection == null){
+        connection = mysql_dbc.get();
+    }
+    
+    var data=req.body;
+    var resultJson = {}
+    var stmt = 'delete from surgery_history where history_id = \''+data.id+'\'';        
+    connection.query(stmt, function (err, result) {
+        if(err) {     
+            resultJson.id = data.id;       
+            resultJson.err = err;
+            
+            // res.json(err);
+        }else{
+            resultJson.id = data.id;       
+            resultJson.result = result;            
+            //   res.json(result);
+        }   
+        
+        res.json(resultJson);
+        
+    })
+})
+
 module.exports = router;

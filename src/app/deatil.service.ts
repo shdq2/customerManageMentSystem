@@ -29,4 +29,8 @@ export class DeatilService {
   addHistory(data){
     return this.http.post('http://localhost:3000/detail/addHistory',data);     
   }
+
+  removeHistory(id){
+    return this.http.post('http://localhost:3000/detail/removeHistory',{id:id});     
+  }
 }

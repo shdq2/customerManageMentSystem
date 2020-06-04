@@ -106,10 +106,10 @@ export class MenuComponent implements OnInit {
       }else{
         if(resultJson.length == 0){
           this.menu.addSurgery(this.addData).subscribe(data2=>{
-            console.log(data2);
+            
             var result2 = JSON.stringify(data2);
             var resultJson2 = JSON.parse(result2).result;
-            console.log(resultJson2);
+            
             if(resultJson2.err){
               alert("Check log");
               console.log(resultJson2.err);

@@ -90,6 +90,9 @@
             <th>
                 특이사항
             </th>            
+            <th>
+                삭제
+            </th>        
         </tr>
         <tr 
             mat-tab-link 
@@ -114,6 +117,10 @@
             <td>
                 {{history.memo}}
             </td>
+            <td >
+                <input type="button" value="삭제" class="btn btn-danger" (click)="removeHistory(history)"/>
+            </td>
+            
         </tr>
     </table>
     <div class="pageNationDiv">
@@ -187,6 +194,7 @@
                                 <input type="text" placeholder="특이사항 입력" class="form-control" name="memo" value={{user_Info.customer_memo}}/>
                             </td>
                         </tr>
+
                     </table>
                 </div>    
             </div>
@@ -276,6 +284,42 @@
                                     </select>
                                 </td>
                             </tr>
+
+                            <tr>
+                                <td>
+                                    시술 일시
+                                </td>
+                                <td class="add-customer-section-input" >
+                                    <input [matDatepicker]="myDatepicker" class="form-control" disabled (dateChange)="dateChange($event)" [value]="date.value" style="display:inline-block;width:50%;"/>
+                                        <mat-datepicker-toggle [for]="myDatepicker" style="display:inline-block"></mat-datepicker-toggle>
+                                        <mat-datepicker #myDatepicker disabled="false" style="display:inline-block"></mat-datepicker><br />
+                                    <input type="radio" value="0" name="time" [checked]="currentTime == 0"/> am
+                                    <input type="radio" value="1" name="time" [checked]="currentTime == 1"/> pm
+                                     
+                                    <select id="hour" class="form-control" style="display:inline-block;width:30%;" [value]="currentHour">                                        
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                    <select id="min" class="form-control" style="display:inline-block;width:30%;">                                        
+                                        <option value="00">00</option>
+                                        <option value="30">30</option>
+                                        
+                                    </select>
+                                        
+                                    <!--<input type="text" placeholder="금액 입력" class="form-control" name="phone" value={{date}} id="currentDate"/>-->
+                                </td>
+                            </tr>
+
                             <tr>
                                 <td>
                                     비고
