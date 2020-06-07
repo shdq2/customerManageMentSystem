@@ -229,7 +229,7 @@ export class DetailComponent implements OnInit {
 export class Dialog{
   test:any;
   constructor(public dialogRef:MatDialogRef<Dialog>,
-    @Inject(MAT_DIALOG_DATA) public data: string){console.log(data);}
+    @Inject(MAT_DIALOG_DATA) public data: any){console.log(data);}
   onClick(val){
     this.dialogRef.close(val);
   }
