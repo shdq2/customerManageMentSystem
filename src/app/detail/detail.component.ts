@@ -168,14 +168,15 @@ export class DetailComponent implements OnInit {
 
   addHistory(customerData,content){    
     var d = new Date(this.date.value);
+    console.log(d);
     var time = customerData.querySelector('input[name=time]:checked').value;
     var hour = customerData.querySelector('#hour').value;
     var min = customerData.querySelector('#min').value;
     if(time == 1){
       hour = parseInt(hour)+12;
     }
-    var date = d.getFullYear() + "/"+(d.getMonth()+1) + "/"+d.getDay()+" " +hour+":"+min;
-    
+    var date = d.getFullYear() + "/"+(d.getMonth()+1) + "/"+d.getDate()+" " +hour+":"+min;
+    console.log(date);
     var sendData = {
       id:this.user_Info.customer_id,
       category:this.currentItem.detail_id,
@@ -183,7 +184,7 @@ export class DetailComponent implements OnInit {
       type:customerData.querySelector('#surgery_pay_type').value,
       memo:customerData.querySelector('#memo').value,
       time:date
-    }    
+    }     
     this.detail.addHistory(sendData).subscribe(data=>{
       content.close();
       this.ngOnInit();

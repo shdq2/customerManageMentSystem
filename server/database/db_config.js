@@ -1,11 +1,11 @@
 module.exports = (function () {
     return {
       local: { // localhost
-        host: 'localhost',
-        port: '3306',
-        user: 'root',
-        password: '1234',
-        database: 'mainDB'
+        host: '13.209.66.192',
+        port: '3030',
+        user: 'maincomputer',
+        password: 'my!computer@',
+        database: 'maindb'
       },
       real: { // real server db info
         host: '',

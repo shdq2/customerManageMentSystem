@@ -289,10 +289,10 @@
                                 <td>
                                     시술 일시
                                 </td>
-                                <td class="add-customer-section-input" >
-                                    <input [matDatepicker]="myDatepicker" class="form-control" disabled (dateChange)="dateChange($event)" [value]="date.value" style="display:inline-block;width:50%;"/>
-                                        <mat-datepicker-toggle [for]="myDatepicker" style="display:inline-block"></mat-datepicker-toggle>
-                                        <mat-datepicker #myDatepicker disabled="false" style="display:inline-block"></mat-datepicker><br />
+                                <td class="add-customer-section-input" >                                                                        
+                                    <input [matDatepicker]="myDatepicker" class="form-control" disabled (dateChange)="dateChange($event)" [value]="date.value" style="display:inline-block;width:50%;" id="t"/>
+                                        <mat-datepicker-toggle [for]="myDatepicker" style="display:inline-block" id="cal"></mat-datepicker-toggle>
+                                        <mat-datepicker #myDatepicker disabled="false" style="display:inline-block" ></mat-datepicker><br />
                                     <input type="radio" value="0" name="time" [checked]="currentTime == 0"/> am
                                     <input type="radio" value="1" name="time" [checked]="currentTime == 1"/> pm
                                      
